@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank You! | Lumière Beauty</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose:#b5838d; --rose-dark:#9a6472; --rose-light:#e8c4cb;
+      --blush:#fce4ec; --cream:#fdf6f0; --champagne:#f7e7ce;
+      --mauve:#6d2b3d; --fg:#2c1a1e; --muted:#8a6b72; --border:#f0dde2;
+      --white:#fff; --green:#2d6a4f;
+      --font-serif:'Cormorant Garamond',Georgia,serif;
+      --font-body:'Raleway',sans-serif;
+      --radius:1rem; --radius-full:50px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:var(--font-body); background:var(--cream); color:var(--fg); min-height:100vh; display:flex; flex-direction:column; }
+    a { color:inherit; text-decoration:none; }
+
+    .topbar { background:var(--mauve); color:rgba(255,255,255,.88); font-size:.76rem; letter-spacing:.12em; text-transform:uppercase; text-align:center; padding:.55rem; }
+    .topbar strong { color:var(--champagne); }
+
+    nav { position:sticky; top:0; z-index:500; background:rgba(253,246,240,.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+    .nav-inner { max-width:1280px; margin:0 auto; padding:0 2rem; height:76px; display:flex; align-items:center; justify-content:space-between; gap:2rem; }
+    .logo { font-family:var(--font-serif); font-size:1.7rem; font-weight:300; letter-spacing:.1em; color:var(--mauve); }
+    .logo em { font-style:italic; color:var(--rose); }
+    .nav-links a { font-size:.78rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); transition:color .25s; margin-left:2.5rem; }
+    .nav-links a:hover { color:var(--rose); }
+
+    /* MAIN CONTENT */
+    main { flex:1; display:flex; align-items:center; justify-content:center; padding:4rem 1.5rem; }
+
+    .confirm-wrap { max-width:680px; width:100%; }
+
+    /* HERO CARD */
+    .hero-card {
+      background: linear-gradient(145deg, var(--mauve) 0%, #8b3a50 60%, #4a1628 100%);
+      border-radius:1.5rem 1.5rem 0 0;
+      padding:3.5rem 2.5rem;
+      text-align:center;
+      color:#fff;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-card::before {
+      content:'✦';
+      position:absolute;
+      font-size:20rem;
+      top:-6rem;
+      left:50%;
+      transform:translateX(-50%);
+      opacity:.03;
+      font-family:var(--font-serif);
+      pointer-events:none;
+    }
+
+    /* ANIMATED CHECK */
+    .check-anim {
+      width:96px;
+      height:96px;
+      border-radius:50%;
+      background:rgba(255,255,255,.12);
+      border:2px solid rgba(255,255,255,.25);
+      margin:0 auto 2rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:2.6rem;
+      position:relative;
+      z-index:1;
+      animation:popBounce .6s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+    @keyframes popBounce {
+      from { transform:scale(0) rotate(-20deg); opacity:0; }
+      to   { transform:scale(1) rotate(0deg);   opacity:1; }
+    }
+    .hero-card h1 {
+      font-family:var(--font-serif);
+      font-size:clamp(1.8rem,5vw,2.8rem);
+      font-weight:300;
+      margin-bottom:.75rem;
+      position:relative;
+      z-index:1;
+    }
+    .hero-card h1 em { font-style:italic; color:var(--rose-light); }
+    .hero-card p {
+      font-size:.95rem;
+      color:rgba(255,255,255,.65);
+      font-weight:300;
+      line-height:1.8;
+      max-width:480px;
+      margin:0 auto;
+      position:relative;
+      z-index:1;
+    }
+
+    /* DETAILS CARD */
+    .details-card {
+      background:var(--white);
+      border:1px solid var(--border);
+      border-top:none;
+      border-radius:0 0 1.5rem 1.5rem;
+      padding:2.5rem;
+    }
+
+    /* ORDER NUMBER */
+    .order-ref-box {
+      background:linear-gradient(135deg, rgba(181,131,141,.08), rgba(247,231,206,.3));
+      border:1.5px solid var(--rose-light);
+      border-radius:var(--radius);
+      padding:1.5rem 2rem;
+      margin-bottom:2rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      flex-wrap:wrap;
+      gap:1.25rem;
+    }
+    .ref-group label {
+      font-size:.7rem;
+      font-weight:600;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--muted);
+      display:block;
+      margin-bottom:.35rem;
+    }
+    .ref-value {
+      font-family:var(--font-serif);
+      font-size:1.5rem;
+      font-weight:600;
+      color:var(--mauve);
+      letter-spacing:.04em;
+    }
+    .date-value { font-size:.95rem; font-weight:500; color:var(--fg); }
+
+    /* DELIVERY TIMELINE */
+    .timeline { display:flex; justify-content:space-between; position:relative; margin-bottom:2.5rem; padding-bottom:1rem; }
+    .timeline::before {
+      content:'';
+      position:absolute;
+      top:18px; left:12%; right:12%;
+      height:2px;
+      background:var(--border);
+      z-index:0;
+    }
+    .tl-step { display:flex; flex-direction:column; align-items:center; gap:.4rem; flex:1; position:relative; z-index:1; }
+    .tl-dot {
+      width:38px; height:38px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1rem;
+      border:2px solid var(--border);
+      background:var(--white);
+      transition:all .3s;
+    }
+    .tl-dot.done { background:var(--green); border-color:var(--green); }
+    .tl-dot.active {
+      background:var(--rose);
+      border-color:var(--rose);
+      animation:glowPulse 1.8s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow:0 0 0 0 rgba(181,131,141,.4); }
+      50%       { box-shadow:0 0 0 10px rgba(181,131,141,0); }
+    }
+    .tl-label { font-size:.7rem; font-weight:600; text-align:center; color:var(--muted); line-height:1.3; letter-spacing:.04em; text-transform:uppercase; }
+    .tl-label.done { color:var(--green); }
+    .tl-label.active { color:var(--rose); }
+
+    /* WHAT'S NEXT */
+    .whats-next { margin-bottom:2rem; }
+    .whats-next h3 {
+      font-family:var(--font-serif);
+      font-size:1.3rem;
+      font-weight:300;
+      color:var(--mauve);
+      margin-bottom:1.25rem;
+    }
+    .next-list { display:flex; flex-direction:column; gap:.85rem; }
+    .next-item {
+      display:flex;
+      gap:1rem;
+      align-items:flex-start;
+      padding:1rem 1.1rem;
+      background:var(--cream);
+      border:1px solid var(--border);
+      border-radius:.75rem;
+    }
+    .next-icon { font-size:1.25rem; flex-shrink:0; margin-top:.05rem; }
+    .next-text { font-size:.86rem; color:var(--muted); font-weight:300; line-height:1.7; }
+    .next-text strong { color:var(--fg); font-weight:600; }
+
+    /* CTA BUTTONS */
+    .cta-row { display:flex; gap:1rem; flex-wrap:wrap; }
+    .btn-primary {
+      flex:1;
+      min-width:140px;
+      padding:.95rem 1.75rem;
+      background:var(--mauve);
+      color:var(--champagne);
+      border:none;
+      border-radius:var(--radius-full);
+      font-family:var(--font-body);
+      font-size:.84rem;
+      font-weight:600;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:background .2s;
+      text-align:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:.4rem;
+    }
+    .btn-primary:hover { background:var(--rose); color:#fff; }
+    .btn-outline {
+      flex:1;
+      min-width:140px;
+      padding:.95rem 1.75rem;
+      background:transparent;
+      color:var(--fg);
+      border:1.5px solid var(--border);
+      border-radius:var(--radius-full);
+      font-family:var(--font-body);
+      font-size:.84rem;
+      font-weight:600;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:all .2s;
+      text-align:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:.4rem;
+    }
+    .btn-outline:hover { background:var(--blush); border-color:var(--rose-light); }
+
+    .thanks-note {
+      text-align:center;
+      margin-top:1.75rem;
+      font-family:var(--font-serif);
+      font-size:1.05rem;
+      font-style:italic;
+      color:var(--muted);
+    }
+
+    /* FOOTER */
+    footer { background:var(--fg); color:rgba(255,255,255,.75); padding:4rem 0 2rem; margin-top:auto; }
+    .footer-top { max-width:1280px; margin:0 auto; padding:0 2rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:3rem; margin-bottom:3rem; }
+    .footer-logo { font-family:var(--font-serif); font-size:1.5rem; font-weight:300; color:var(--champagne); margin-bottom:.8rem; }
+    .footer-logo em { color:var(--rose-light); font-style:italic; }
+    .footer-col p { font-size:.84rem; color:rgba(255,255,255,.4); line-height:1.8; }
+    .footer-col h4 { font-family:var(--font-serif); font-size:1rem; font-weight:400; color:rgba(255,255,255,.9); margin-bottom:1.1rem; }
+    .footer-col ul { list-style:none; }
+    .footer-col ul li a { font-size:.82rem; color:rgba(255,255,255,.4); display:block; margin-bottom:.5rem; transition:color .2s; }
+    .footer-col ul li a:hover { color:var(--rose-light); }
+    .footer-bottom { max-width:1280px; margin:0 auto; padding:1.5rem 2rem 0; border-top:1px solid rgba(255,255,255,.08); text-align:center; font-size:.76rem; color:rgba(255,255,255,.28); }
+
+    /* CONFETTI */
+    @keyframes confettiDrop {
+      0%   { transform:translateY(-60px) rotate(0deg) scale(1);   opacity:1; }
+      80%  { opacity:1; }
+      100% { transform:translateY(105vh) rotate(540deg) scale(.5); opacity:0; }
+    }
+    .confetti-piece {
+      position:fixed;
+      top:0;
+      pointer-events:none;
+      animation:confettiDrop linear forwards;
+      z-index:9999;
+      border-radius:3px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">💄 <strong>Thank you for shopping with Lumière Beauty!</strong></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Lumière <em>Beauty</em></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="confirm-wrap">
+
+    <!-- ── HERO CARD ── -->
+    <div class="hero-card">
+      <div class="check-anim">✅</div>
+      <h1>Thank You, <em id="cust-name">Beautiful</em>!</h1>
+      <p>Your order has been received and is being lovingly prepared. You'll receive a confirmation email shortly with all the details.</p>
+    </div>
+
+    <!-- ── DETAILS CARD ── -->
+    <div class="details-card">
+
+      <!-- ORDER REFERENCE -->
+      <div class="order-ref-box">
+        <div class="ref-group">
+          <label>Order Number</label>
+          <div class="ref-value" id="order-num">LB-XXXXXXX</div>
+        </div>
+        <div class="ref-group" style="text-align:right">
+          <label>Date Placed</label>
+          <div class="date-value" id="order-date"></div>
+        </div>
+      </div>
+
+      <!-- TIMELINE -->
+      <div class="timeline">
+        <div class="tl-step">
+          <div class="tl-dot done">✓</div>
+          <div class="tl-label done">Order<br>Confirmed</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-dot active">🧴</div>
+          <div class="tl-label active">Being<br>Prepared</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-dot">📦</div>
+          <div class="tl-label">Packed &<br>Shipped</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-dot">🚚</div>
+          <div class="tl-label">Out for<br>Delivery</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-dot">💄</div>
+          <div class="tl-label">Delivered<br>to You</div>
+        </div>
+      </div>
+
+      <!-- WHAT'S NEXT -->
+      <div class="whats-next">
+        <h3>What happens next?</h3>
+        <div class="next-list">
+          <div class="next-item">
+            <div class="next-icon">📧</div>
+            <div class="next-text">
+              <strong>Confirmation Email</strong> — We've sent a detailed order confirmation to your email. Check your inbox (and spam folder just in case!).
+            </div>
+          </div>
+          <div class="next-item">
+            <div class="next-icon">🧴</div>
+            <div class="next-text">
+              <strong>Order Preparation</strong> — Your products are being carefully selected, quality-checked, and gift-wrapped within <strong>1 business day</strong>.
+            </div>
+          </div>
+          <div class="next-item">
+            <div class="next-icon">📦</div>
+            <div class="next-text">
+              <strong>Shipping & Tracking</strong> — You'll receive a shipping confirmation with a live tracking link once your parcel is dispatched (<strong>1–2 days</strong>).
+            </div>
+          </div>
+          <div class="next-item">
+            <div class="next-icon">💌</div>
+            <div class="next-text">
+              <strong>Estimated Delivery</strong> — Your order will arrive within <strong>5–7 business days</strong> for standard shipping, or sooner if you chose express.
+            </div>
+          </div>
+          <div class="next-item">
+            <div class="next-icon">↩️</div>
+            <div class="next-text">
+              <strong>30-Day Returns</strong> — Not completely in love? Return any item within 30 days for a full refund — no questions asked.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUTTONS -->
+      <div class="cta-row">
+        <a href="shop.html" class="btn-primary">💄 Continue Shopping</a>
+        <a href="index.html" class="btn-outline">🏠 Return to Home</a>
+      </div>
+
+      <p class="thanks-note">"You deserve to feel beautiful every day." — Lumière Beauty 🌹</p>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-col">
+      <div class="footer-logo">Lumière <em>Beauty</em></div>
+      <p>Premium cosmetics crafted with love for every skin tone.</p>
+    </div>
+    <div class="footer-col"><h4>Shop</h4><ul><li><a href="shop.html">All Products</a></li><li><a href="shop.html">New Arrivals</a></li><li><a href="shop.html">Bestsellers</a></li></ul></div>
+    <div class="footer-col"><h4>Help</h4><ul><li><a>Shipping Info</a></li><li><a>Returns & Exchanges</a></li><li><a>Track Your Order</a></li><li><a>Contact Us</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a>hello@lumierebeauty.com</a></li><li><a>+1 (800) LUMIÈRE</a></li><li><a>12 Beauty Lane, New York</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">&copy; <span id="yr"></span> Lumière Beauty. All rights reserved.</div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  /* ── READ URL PARAMS ── */
+  const params   = new URLSearchParams(window.location.search);
+  const name     = params.get('name')  || 'Beautiful';
+  const orderId  = params.get('order') || 'LB-XXXXXXX';
+
+  document.getElementById('cust-name').textContent = name;
+  document.getElementById('order-num').textContent  = orderId;
+  document.getElementById('order-date').textContent = new Date().toLocaleDateString('en-US', {
+    weekday:'long', year:'numeric', month:'long', day:'numeric'
+  });
+
+  /* ── CONFETTI ── */
+  const PALETTE = ['#b5838d','#f7e7ce','#6d2b3d','#e8c4cb','#fce4ec','#2d6a4f','#8b3a50'];
+
+  function launchConfetti() {
+    const count = 80;
+    for (let i=0; i<count; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        const size = 5 + Math.random() * 10;
+        const isCircle = Math.random() > .55;
+        el.style.cssText = `
+          left: ${Math.random()*100}vw;
+          width: ${size}px;
+          height: ${isCircle ? size : size * (1.2 + Math.random())}px;
+          background: ${PALETTE[Math.floor(Math.random()*PALETTE.length)]};
+          border-radius: ${isCircle ? '50%' : '2px'};
+          animation-duration: ${2.8 + Math.random() * 3}s;
+          animation-delay: 0s;
+          opacity: ${0.6 + Math.random()*.4};
+        `;
+        document.body.appendChild(el);
+        el.addEventListener('animationend', () => el.remove());
+      }, i * 28);
+    }
+  }
+
+  // Launch confetti after card animates in
+  setTimeout(launchConfetti, 300);
+</script>
+</body>
+</html>
