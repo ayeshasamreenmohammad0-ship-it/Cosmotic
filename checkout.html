@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | Lumière Beauty</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose:#b5838d; --rose-dark:#9a6472; --rose-light:#e8c4cb;
+      --blush:#fce4ec; --cream:#fdf6f0; --champagne:#f7e7ce;
+      --mauve:#6d2b3d; --fg:#2c1a1e; --muted:#8a6b72;
+      --border:#f0dde2; --white:#fff; --card:#fff;
+      --green:#2d6a4f; --red:#c0392b;
+      --font-serif:'Cormorant Garamond',Georgia,serif;
+      --font-body:'Raleway',sans-serif;
+      --radius:1rem; --radius-full:50px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:var(--font-body); background:var(--cream); color:var(--fg); min-height:100vh; display:flex; flex-direction:column; }
+    a { color:inherit; text-decoration:none; }
+
+    /* TOPBAR */
+    .topbar { background:var(--mauve); color:rgba(255,255,255,.88); font-size:.76rem; letter-spacing:.12em; text-transform:uppercase; text-align:center; padding:.55rem; }
+    .topbar strong { color:var(--champagne); }
+
+    /* NAV */
+    nav { position:sticky; top:0; z-index:500; background:rgba(253,246,240,.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+    .nav-inner { max-width:1280px; margin:0 auto; padding:0 2rem; height:76px; display:flex; align-items:center; justify-content:space-between; gap:2rem; }
+    .logo { font-family:var(--font-serif); font-size:1.7rem; font-weight:300; letter-spacing:.1em; color:var(--mauve); }
+    .logo em { font-style:italic; color:var(--rose); }
+    .nav-links { display:flex; gap:2.5rem; }
+    .nav-links a { font-size:.78rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); transition:color .25s; }
+    .nav-links a:hover { color:var(--rose); }
+    .cart-link { display:flex; align-items:center; gap:.5rem; background:var(--mauve); color:var(--champagne); padding:.55rem 1.35rem; border-radius:var(--radius-full); font-size:.8rem; font-weight:600; }
+    .cart-badge { background:var(--champagne); color:var(--mauve); font-size:.62rem; font-weight:800; min-width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; }
+
+    /* PAGE HEADER */
+    .page-header { background:linear-gradient(135deg,var(--mauve) 0%,#8b3a50 100%); color:#fff; padding:3.5rem 2rem 3rem; }
+    .page-header-inner { max-width:1280px; margin:0 auto; }
+    .breadcrumb { display:flex; gap:.5rem; font-size:.76rem; color:rgba(255,255,255,.45); margin-bottom:.9rem; }
+    .breadcrumb a { color:rgba(255,255,255,.6); }
+    .breadcrumb span { color:var(--rose-light); }
+    .page-header h1 { font-family:var(--font-serif); font-size:clamp(2rem,5vw,3rem); font-weight:300; }
+    .page-header h1 em { font-style:italic; color:var(--rose-light); }
+
+    /* STEPS */
+    .progress { background:var(--white); border-bottom:1px solid var(--border); padding:1rem 2rem; }
+    .progress-inner { max-width:1280px; margin:0 auto; display:flex; align-items:center; gap:.5rem; }
+    .step { display:flex; align-items:center; gap:.4rem; font-size:.75rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+    .step.done { color:var(--green); }
+    .step.active { color:var(--rose); }
+    .step-dot { width:22px; height:22px; border-radius:50%; border:2px solid currentColor; display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:700; flex-shrink:0; }
+    .step-sep { flex:1; height:1px; background:var(--border); max-width:80px; }
+
+    main { flex:1; padding:2.5rem 0 5rem; }
+    .container { max-width:1280px; margin:0 auto; padding:0 2rem; }
+    .checkout-layout { display:grid; grid-template-columns:1fr; gap:2rem; }
+    @media(min-width:900px) { .checkout-layout { grid-template-columns:1fr 420px; } }
+
+    /* FORM CARD */
+    .form-card { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:2.5rem; }
+
+    .form-section { margin-bottom:2.5rem; }
+    .form-section:last-child { margin-bottom:0; }
+
+    .section-title {
+      font-family:var(--font-serif);
+      font-size:1.3rem;
+      font-weight:300;
+      color:var(--mauve);
+      margin-bottom:1.5rem;
+      padding-bottom:.85rem;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+    }
+    .section-num {
+      background:var(--mauve);
+      color:var(--champagne);
+      width:26px;
+      height:26px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:var(--font-body);
+      font-size:.75rem;
+      font-weight:700;
+      flex-shrink:0;
+    }
+
+    .field-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
+    .field-grid .full { grid-column:span 2; }
+    @media(max-width:560px) { .field-grid { grid-template-columns:1fr; } .field-grid .full { grid-column:span 1; } }
+
+    .field { display:flex; flex-direction:column; gap:.35rem; }
+    .field label { font-size:.76rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--fg); }
+    .field label .req { color:var(--rose); margin-left:.1rem; }
+
+    .field input,
+    .field select,
+    .field textarea {
+      padding:.8rem 1.1rem;
+      border:1.5px solid var(--border);
+      border-radius:.65rem;
+      font-family:var(--font-body);
+      font-size:.9rem;
+      background:var(--cream);
+      color:var(--fg);
+      outline:none;
+      transition:border-color .2s, background .2s;
+      -webkit-appearance:none;
+    }
+    .field input:focus,
+    .field select:focus { border-color:var(--rose); background:var(--white); }
+    .field input.invalid { border-color:var(--red); background:#fff5f5; }
+    .field-error { font-size:.73rem; color:var(--red); min-height:1rem; font-weight:500; }
+
+    /* PAYMENT OPTIONS */
+    .pay-options { display:flex; gap:.85rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+    .pay-option {
+      flex:1;
+      min-width:120px;
+      padding:.75rem 1rem;
+      border:2px solid var(--border);
+      border-radius:.75rem;
+      text-align:center;
+      cursor:pointer;
+      transition:all .2s;
+      background:var(--cream);
+    }
+    .pay-option.selected {
+      border-color:var(--rose);
+      background:rgba(181,131,141,.06);
+    }
+    .pay-option:hover { border-color:var(--rose-light); }
+    .pay-option-icon { font-size:1.4rem; margin-bottom:.25rem; display:block; }
+    .pay-option-label { font-size:.72rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+    .pay-option.selected .pay-option-label { color:var(--mauve); }
+
+    /* SUBMIT */
+    .place-order-btn {
+      width:100%;
+      padding:1.15rem;
+      margin-top:2rem;
+      background:var(--mauve);
+      color:var(--champagne);
+      border:none;
+      border-radius:var(--radius-full);
+      font-family:var(--font-body);
+      font-size:.9rem;
+      font-weight:600;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:background .2s;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:.6rem;
+    }
+    .place-order-btn:hover { background:var(--rose); color:#fff; }
+    .place-order-btn:disabled { opacity:.55; cursor:not-allowed; }
+    .secure-note { text-align:center; margin-top:1rem; font-size:.76rem; color:var(--muted); }
+
+    /* ORDER SUMMARY SIDEBAR */
+    .order-summary { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:2rem; position:sticky; top:93px; align-self:start; }
+    .os-title { font-family:var(--font-serif); font-size:1.3rem; font-weight:300; color:var(--mauve); margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
+
+    .os-items { max-height:300px; overflow-y:auto; display:flex; flex-direction:column; gap:1rem; margin-bottom:1.5rem; padding-right:.2rem; }
+    .os-item { display:flex; gap:.85rem; align-items:center; }
+    .os-thumb { position:relative; flex-shrink:0; width:58px; height:58px; }
+    .os-thumb img { width:100%; height:100%; object-fit:cover; border-radius:.6rem; border:1px solid var(--border); }
+    .os-qty { position:absolute; top:-6px; right:-6px; background:var(--mauve); color:var(--champagne); font-size:.6rem; font-weight:800; width:17px; height:17px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+    .os-name { font-family:var(--font-serif); font-size:.95rem; font-weight:400; line-height:1.35; flex:1; }
+    .os-shade { font-size:.72rem; color:var(--muted); }
+    .os-price { font-size:.95rem; font-weight:600; color:var(--mauve); white-space:nowrap; }
+
+    .os-divider { border:none; border-top:1px solid var(--border); margin:.5rem 0; }
+    .os-row { display:flex; justify-content:space-between; padding:.5rem 0; font-size:.86rem; color:var(--muted); }
+    .os-row.free { color:var(--green); font-weight:600; }
+    .os-total { display:flex; justify-content:space-between; padding-top:.85rem; margin-top:.25rem; border-top:1.5px solid var(--fg); }
+    .os-total .label { font-family:var(--font-serif); font-size:1.1rem; font-weight:400; }
+    .os-total .amount { font-family:var(--font-serif); font-size:1.4rem; font-weight:600; color:var(--mauve); }
+    .trust-block { margin-top:1.25rem; padding:1rem 1.1rem; background:rgba(45,106,79,.05); border:1px solid rgba(45,106,79,.2); border-radius:.75rem; font-size:.78rem; color:var(--green); display:flex; gap:.6rem; align-items:flex-start; line-height:1.6; }
+
+    /* FOOTER */
+    footer { background:var(--fg); color:rgba(255,255,255,.75); padding:4rem 0 2rem; margin-top:auto; }
+    .footer-top { max-width:1280px; margin:0 auto; padding:0 2rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:3rem; margin-bottom:3rem; }
+    .footer-logo { font-family:var(--font-serif); font-size:1.5rem; font-weight:300; color:var(--champagne); margin-bottom:.8rem; }
+    .footer-logo em { color:var(--rose-light); font-style:italic; }
+    .footer-col p { font-size:.84rem; color:rgba(255,255,255,.4); line-height:1.8; }
+    .footer-col h4 { font-family:var(--font-serif); font-size:1rem; font-weight:400; color:rgba(255,255,255,.9); margin-bottom:1.1rem; }
+    .footer-col ul { list-style:none; }
+    .footer-col ul li a { font-size:.82rem; color:rgba(255,255,255,.4); display:block; margin-bottom:.5rem; }
+    .footer-bottom { max-width:1280px; margin:0 auto; padding:1.5rem 2rem 0; border-top:1px solid rgba(255,255,255,.08); text-align:center; font-size:.76rem; color:rgba(255,255,255,.28); }
+  </style>
+</head>
+<body>
+
+<div class="topbar">🔒 <strong>Secure Checkout</strong> · SSL encrypted · Your data is safe</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Lumière <em>Beauty</em></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+    </div>
+    <a href="cart.html" class="cart-link">🛍 Bag <span class="cart-badge" id="badge">0</span></a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> <span>/</span>
+      <a href="cart.html">Bag</a> <span>/</span>
+      <span>Checkout</span>
+    </div>
+    <h1>Secure <em>Checkout</em></h1>
+  </div>
+</div>
+
+<!-- STEPS -->
+<div class="progress">
+  <div class="progress-inner">
+    <div class="step done"><span class="step-dot">✓</span> Bag</div>
+    <div class="step-sep"></div>
+    <div class="step active"><span class="step-dot">2</span> Details</div>
+    <div class="step-sep"></div>
+    <div class="step"><span class="step-dot">3</span> Confirm</div>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+    <div class="checkout-layout">
+
+      <!-- ── FORM ── -->
+      <div class="form-card">
+        <form id="checkout-form" novalidate>
+
+          <!-- 1. CONTACT -->
+          <div class="form-section">
+            <div class="section-title"><span class="section-num">1</span> Contact Information</div>
+            <div class="field-grid">
+              <div class="field">
+                <label for="firstName">First Name <span class="req">*</span></label>
+                <input id="firstName" type="text" placeholder="Jane" autocomplete="given-name" />
+                <span class="field-error" id="e-firstName"></span>
+              </div>
+              <div class="field">
+                <label for="lastName">Last Name <span class="req">*</span></label>
+                <input id="lastName" type="text" placeholder="Doe" autocomplete="family-name" />
+                <span class="field-error" id="e-lastName"></span>
+              </div>
+              <div class="field full">
+                <label for="email">Email Address <span class="req">*</span></label>
+                <input id="email" type="email" placeholder="jane@example.com" autocomplete="email" />
+                <span class="field-error" id="e-email"></span>
+              </div>
+              <div class="field full">
+                <label for="phone">Phone Number</label>
+                <input id="phone" type="tel" placeholder="+1 (555) 000-0000" autocomplete="tel" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. SHIPPING -->
+          <div class="form-section">
+            <div class="section-title"><span class="section-num">2</span> Shipping Address</div>
+            <div class="field-grid">
+              <div class="field full">
+                <label for="address">Street Address <span class="req">*</span></label>
+                <input id="address" type="text" placeholder="123 Beauty Lane, Apt 4B" autocomplete="street-address" />
+                <span class="field-error" id="e-address"></span>
+              </div>
+              <div class="field">
+                <label for="city">City <span class="req">*</span></label>
+                <input id="city" type="text" placeholder="New York" autocomplete="address-level2" />
+                <span class="field-error" id="e-city"></span>
+              </div>
+              <div class="field">
+                <label for="state">State / Province <span class="req">*</span></label>
+                <input id="state" type="text" placeholder="NY" autocomplete="address-level1" />
+                <span class="field-error" id="e-state"></span>
+              </div>
+              <div class="field">
+                <label for="zip">ZIP / Postal Code <span class="req">*</span></label>
+                <input id="zip" type="text" placeholder="10001" autocomplete="postal-code" />
+                <span class="field-error" id="e-zip"></span>
+              </div>
+              <div class="field">
+                <label for="country">Country</label>
+                <select id="country" autocomplete="country">
+                  <option value="US">United States</option>
+                  <option value="CA">Canada</option>
+                  <option value="GB">United Kingdom</option>
+                  <option value="AU">Australia</option>
+                  <option value="FR">France</option>
+                  <option value="DE">Germany</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. DELIVERY -->
+          <div class="form-section">
+            <div class="section-title"><span class="section-num">3</span> Delivery Method</div>
+            <div class="field-grid">
+              <div class="field full">
+                <label for="delivery">Shipping Option <span class="req">*</span></label>
+                <select id="delivery">
+                  <option value="standard">Standard Shipping — 5-7 days ($6.95)</option>
+                  <option value="express">Express Shipping — 2-3 days ($14.95)</option>
+                  <option value="overnight">Overnight — Next business day ($24.95)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. PAYMENT -->
+          <div class="form-section">
+            <div class="section-title"><span class="section-num">4</span> Payment Details</div>
+
+            <div class="pay-options">
+              <div class="pay-option selected" onclick="selectPay(this)">
+                <span class="pay-option-icon">💳</span>
+                <div class="pay-option-label">Card</div>
+              </div>
+              <div class="pay-option" onclick="selectPay(this)">
+                <span class="pay-option-icon">📱</span>
+                <div class="pay-option-label">PayPal</div>
+              </div>
+              <div class="pay-option" onclick="selectPay(this)">
+                <span class="pay-option-icon">🍎</span>
+                <div class="pay-option-label">Apple Pay</div>
+              </div>
+              <div class="pay-option" onclick="selectPay(this)">
+                <span class="pay-option-icon">🌀</span>
+                <div class="pay-option-label">Klarna</div>
+              </div>
+            </div>
+
+            <div class="field-grid">
+              <div class="field full">
+                <label for="cardName">Cardholder Name <span class="req">*</span></label>
+                <input id="cardName" type="text" placeholder="Jane Doe" autocomplete="cc-name" />
+                <span class="field-error" id="e-cardName"></span>
+              </div>
+              <div class="field full">
+                <label for="cardNum">Card Number <span class="req">*</span></label>
+                <input id="cardNum" type="text" placeholder="0000  0000  0000  0000" maxlength="19" autocomplete="cc-number" inputmode="numeric" />
+                <span class="field-error" id="e-cardNum"></span>
+              </div>
+              <div class="field">
+                <label for="expiry">Expiry Date <span class="req">*</span></label>
+                <input id="expiry" type="text" placeholder="MM / YY" maxlength="7" autocomplete="cc-exp" inputmode="numeric" />
+                <span class="field-error" id="e-expiry"></span>
+              </div>
+              <div class="field">
+                <label for="cvv">CVV / CVC <span class="req">*</span></label>
+                <input id="cvv" type="text" placeholder="123" maxlength="4" autocomplete="cc-csc" inputmode="numeric" />
+                <span class="field-error" id="e-cvv"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBMIT -->
+          <button type="submit" class="place-order-btn" id="place-btn">
+            🔒 Place My Order · <span id="pay-total">$0.00</span>
+          </button>
+          <p class="secure-note">🛡 Your payment information is encrypted with 256-bit SSL. We never store card details.</p>
+
+        </form>
+      </div>
+
+      <!-- ── ORDER SUMMARY SIDEBAR ── -->
+      <aside class="order-summary">
+        <div class="os-title">Your Order</div>
+        <div class="os-items" id="os-items"></div>
+        <hr class="os-divider" />
+        <div class="os-row"><span>Subtotal</span><span id="os-sub">—</span></div>
+        <div class="os-row" id="os-ship-row"><span>Shipping</span><span id="os-ship">—</span></div>
+        <div class="os-total">
+          <span class="label">Total</span>
+          <span class="amount" id="os-total">—</span>
+        </div>
+        <div class="trust-block">
+          ✅ 30-day free returns · Cruelty-free · Dermatologist tested · Sustainably packaged
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-col">
+      <div class="footer-logo">Lumière <em>Beauty</em></div>
+      <p>Premium cosmetics for every skin tone.</p>
+    </div>
+    <div class="footer-col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="cart.html">Bag</a></li></ul></div>
+    <div class="footer-col"><h4>Help</h4><ul><li><a>Shipping Policy</a></li><li><a>Returns</a></li><li><a>Contact Us</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a>hello@lumierebeauty.com</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">&copy; <span id="yr"></span> Lumière Beauty. All rights reserved.</div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  /* ── CART HELPERS ── */
+  function getCart() { try { return JSON.parse(localStorage.getItem('lumiere-cart')||'[]'); } catch { return []; } }
+  function fmt(n)    { return '$'+n.toFixed(2); }
+
+  /* ── SELECT PAYMENT ── */
+  function selectPay(el) {
+    document.querySelectorAll('.pay-option').forEach(b=>b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  /* ── CARD INPUT FORMATTERS ── */
+  document.getElementById('cardNum').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g,'');
+    v = v.match(/.{1,4}/g)?.join('  ') || v;
+    this.value = v.slice(0,19);
+  });
+  document.getElementById('expiry').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g,'');
+    if (v.length>=3) v = v.slice(0,2)+' / '+v.slice(2,4);
+    this.value = v;
+  });
+  document.getElementById('cvv').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g,'');
+  });
+
+  /* ── RENDER ORDER SUMMARY ── */
+  function renderSummary() {
+    const cart = getCart();
+    if (!cart.length) { window.location.href = 'cart.html'; return; }
+
+    const n = cart.reduce((s,i)=>s+i.qty,0);
+    document.getElementById('badge').textContent = n;
+
+    let sub = 0;
+    const list = document.getElementById('os-items');
+    list.innerHTML = '';
+    cart.forEach(item => {
+      sub += item.price * item.qty;
+      list.innerHTML += `
+        <div class="os-item">
+          <div class="os-thumb">
+            <img src="${item.img}" alt="${item.name}" />
+            <span class="os-qty">${item.qty}</span>
+          </div>
+          <div style="flex:1">
+            <div class="os-name">${item.name}</div>
+            <div class="os-shade">${item.shade||''}</div>
+          </div>
+          <div class="os-price">${fmt(item.price * item.qty)}</div>
+        </div>`;
+    });
+
+    const ship = sub >= 50 ? 0 : 6.95;
+    const total = sub + ship;
+
+    document.getElementById('os-sub').textContent = fmt(sub);
+    const shipRow = document.getElementById('os-ship-row');
+    if (ship === 0) {
+      shipRow.classList.add('free');
+      document.getElementById('os-ship').textContent = '🎁 Free';
+    } else {
+      document.getElementById('os-ship').textContent = fmt(ship);
+    }
+    document.getElementById('os-total').textContent = fmt(total);
+    document.getElementById('pay-total').textContent = fmt(total);
+  }
+
+  /* ── VALIDATION ── */
+  function v(id)  { return document.getElementById(id).value.trim(); }
+
+  function setErr(id, msg) {
+    const inp = document.getElementById(id);
+    const errEl = document.getElementById('e-'+id);
+    if (!errEl) return !!msg;
+    if (msg) {
+      inp.classList.add('invalid');
+      errEl.textContent = msg;
+    } else {
+      inp.classList.remove('invalid');
+      errEl.textContent = '';
+    }
+    return !!msg;
+  }
+
+  function validate() {
+    let hasError = false;
+
+    // Contact
+    hasError = setErr('firstName', v('firstName').length<2 ? 'Please enter your first name' : '') || hasError;
+    hasError = setErr('lastName',  v('lastName').length<2  ? 'Please enter your last name'  : '') || hasError;
+    hasError = setErr('email',     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email')) ? 'Please enter a valid email address' : '') || hasError;
+
+    // Shipping
+    hasError = setErr('address', v('address').length<5  ? 'Please enter your street address' : '') || hasError;
+    hasError = setErr('city',    v('city').length<2     ? 'Please enter your city'           : '') || hasError;
+    hasError = setErr('state',   v('state').length<2    ? 'Please enter your state'          : '') || hasError;
+    hasError = setErr('zip',     v('zip').length<4      ? 'Please enter a valid ZIP code'    : '') || hasError;
+
+    // Payment
+    hasError = setErr('cardName', v('cardName').length<2              ? 'Please enter the cardholder name'    : '') || hasError;
+    hasError = setErr('cardNum',  v('cardNum').replace(/\s/g,'').length<15 ? 'Please enter a valid card number' : '') || hasError;
+    hasError = setErr('expiry',   !/^\d{2}\s\/\s\d{2}$/.test(v('expiry')) ? 'Use MM / YY format'             : '') || hasError;
+    hasError = setErr('cvv',      v('cvv').length<3                   ? 'CVV must be 3–4 digits'              : '') || hasError;
+
+    return !hasError;
+  }
+
+  /* ── SUBMIT ── */
+  document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    if (!validate()) {
+      const firstErr = document.querySelector('.invalid');
+      firstErr?.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+
+    const btn = document.getElementById('place-btn');
+    btn.disabled = true;
+    btn.textContent = '✨ Processing your order…';
+
+    // Simulate network delay
+    await new Promise(r => setTimeout(r, 1600));
+
+    // Generate order ID and redirect
+    const orderId = 'LB-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2,6).toUpperCase();
+    const firstName = v('firstName');
+    const email = v('email');
+
+    localStorage.removeItem('lumiere-cart');
+    window.location.href = `thank-you.html?order=${encodeURIComponent(orderId)}&name=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}`;
+  });
+
+  renderSummary();
+</script>
+</body>
+</html>
