@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Bag | Lumière Beauty</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose:#b5838d; --rose-dark:#9a6472; --rose-light:#e8c4cb;
+      --blush:#fce4ec; --cream:#fdf6f0; --champagne:#f7e7ce;
+      --mauve:#6d2b3d; --fg:#2c1a1e; --muted:#8a6b72; --border:#f0dde2;
+      --white:#fff; --card:#fff; --green:#2d6a4f;
+      --font-serif:'Cormorant Garamond',Georgia,serif;
+      --font-body:'Raleway',sans-serif;
+      --radius:1rem; --radius-full:50px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:var(--font-body); background:var(--cream); color:var(--fg); min-height:100vh; display:flex; flex-direction:column; }
+    a { color:inherit; text-decoration:none; }
+
+    .topbar { background:var(--mauve); color:rgba(255,255,255,.88); font-size:.76rem; letter-spacing:.12em; text-transform:uppercase; text-align:center; padding:.55rem; }
+    .topbar strong { color:var(--champagne); }
+
+    nav { position:sticky; top:0; z-index:500; background:rgba(253,246,240,.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+    .nav-inner { max-width:1280px; margin:0 auto; padding:0 2rem; height:76px; display:flex; align-items:center; justify-content:space-between; gap:2rem; }
+    .logo { font-family:var(--font-serif); font-size:1.7rem; font-weight:300; letter-spacing:.1em; color:var(--mauve); }
+    .logo em { font-style:italic; color:var(--rose); }
+    .nav-links { display:flex; gap:2.5rem; }
+    .nav-links a { font-size:.78rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); transition:color .25s; }
+    .nav-links a:hover { color:var(--rose); }
+    .cart-link { display:flex; align-items:center; gap:.5rem; background:var(--mauve); color:var(--champagne); padding:.55rem 1.35rem; border-radius:var(--radius-full); font-size:.8rem; font-weight:600; }
+    .cart-badge { background:var(--champagne); color:var(--mauve); font-size:.62rem; font-weight:800; min-width:18px; height:18px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; }
+
+    /* PAGE HEADER */
+    .page-header { background:linear-gradient(135deg,var(--mauve) 0%,#8b3a50 100%); color:#fff; padding:3.5rem 2rem 3rem; }
+    .page-header-inner { max-width:1280px; margin:0 auto; }
+    .breadcrumb { display:flex; gap:.5rem; font-size:.76rem; color:rgba(255,255,255,.45); margin-bottom:.9rem; }
+    .breadcrumb a { color:rgba(255,255,255,.6); }
+    .breadcrumb span { color:var(--rose-light); }
+    .page-header h1 { font-family:var(--font-serif); font-size:clamp(2rem,5vw,3rem); font-weight:300; }
+    .page-header h1 em { font-style:italic; color:var(--rose-light); }
+
+    /* PROGRESS STEPS */
+    .progress { background:var(--white); border-bottom:1px solid var(--border); padding:1rem 2rem; }
+    .progress-inner { max-width:1280px; margin:0 auto; display:flex; align-items:center; gap:.5rem; }
+    .step { display:flex; align-items:center; gap:.4rem; font-size:.75rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+    .step.active { color:var(--rose); }
+    .step-dot { width:22px; height:22px; border-radius:50%; border:2px solid currentColor; display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:700; flex-shrink:0; }
+    .step-sep { flex:1; height:1px; background:var(--border); max-width:80px; }
+
+    main { flex:1; padding:2.5rem 0 5rem; }
+    .container { max-width:1280px; margin:0 auto; padding:0 2rem; }
+
+    /* EMPTY */
+    .empty-bag { text-align:center; padding:6rem 1rem; background:var(--white); border-radius:var(--radius); border:1px solid var(--border); }
+    .empty-bag .icon { font-size:5rem; margin-bottom:1.5rem; }
+    .empty-bag h2 { font-family:var(--font-serif); font-size:2rem; font-weight:300; color:var(--mauve); margin-bottom:.6rem; }
+    .empty-bag p { color:var(--muted); font-size:.92rem; margin-bottom:2rem; font-weight:300; }
+    .btn-shop { display:inline-flex; align-items:center; gap:.5rem; padding:.9rem 2.4rem; border-radius:var(--radius-full); background:var(--mauve); color:var(--champagne); font-family:var(--font-body); font-size:.85rem; font-weight:600; border:none; cursor:pointer; transition:background .2s; }
+    .btn-shop:hover { background:var(--rose-dark); }
+
+    /* LAYOUT */
+    .cart-layout { display:grid; grid-template-columns:1fr; gap:2rem; }
+    @media(min-width:900px) { .cart-layout { grid-template-columns:1fr 380px; } }
+
+    /* ITEMS */
+    .items-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; }
+    .items-header h2 { font-family:var(--font-serif); font-size:1.25rem; font-weight:400; }
+    .clear-all { font-size:.76rem; font-weight:500; color:var(--muted); background:none; border:none; cursor:pointer; letter-spacing:.08em; text-transform:uppercase; transition:color .2s; }
+    .clear-all:hover { color:var(--rose); }
+
+    .cart-item { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; display:flex; gap:1.25rem; align-items:flex-start; margin-bottom:1rem; transition:box-shadow .2s; }
+    .cart-item:hover { box-shadow:0 4px 16px rgba(181,131,141,.12); }
+    .item-img { width:96px; height:96px; flex-shrink:0; border-radius:.75rem; overflow:hidden; background:var(--blush); }
+    .item-img img { width:100%; height:100%; object-fit:cover; }
+    .item-info { flex:1; }
+    .item-category { font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--rose); font-weight:600; margin-bottom:.2rem; }
+    .item-name { font-family:var(--font-serif); font-size:1.1rem; font-weight:400; margin-bottom:.2rem; line-height:1.35; }
+    .item-shade { font-size:.78rem; color:var(--muted); margin-bottom:.9rem; }
+    .qty-controls { display:flex; align-items:center; gap:.75rem; }
+    .qty-wrap { display:flex; align-items:center; border:1.5px solid var(--border); border-radius:var(--radius-full); overflow:hidden; }
+    .qty-wrap button { background:none; border:none; width:36px; height:36px; font-size:1.1rem; font-weight:600; cursor:pointer; color:var(--fg); transition:background .2s; display:flex; align-items:center; justify-content:center; }
+    .qty-wrap button:hover { background:var(--blush); color:var(--mauve); }
+    .qty-wrap span { min-width:40px; text-align:center; font-size:.9rem; font-weight:600; }
+    .remove-item { background:none; border:none; font-size:.76rem; color:var(--muted); cursor:pointer; letter-spacing:.06em; text-transform:uppercase; font-family:var(--font-body); padding:.4rem .6rem; border-radius:.4rem; transition:all .2s; }
+    .remove-item:hover { color:var(--rose); background:rgba(181,131,141,.08); }
+    .item-price-col { text-align:right; flex-shrink:0; }
+    .item-price { font-family:var(--font-serif); font-size:1.2rem; font-weight:600; color:var(--mauve); }
+    .item-unit { font-size:.72rem; color:var(--muted); }
+
+    /* UPSELL RIBBON */
+    .upsell { background:rgba(247,231,206,.5); border:1px solid var(--champagne); border-radius:var(--radius); padding:1rem 1.5rem; margin-top:1.25rem; display:flex; align-items:center; gap:.8rem; font-size:.84rem; color:var(--mauve); font-weight:500; }
+
+    /* ORDER SUMMARY */
+    .summary { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:2rem; position:sticky; top:93px; align-self:start; }
+    .summary-title { font-family:var(--font-serif); font-size:1.4rem; font-weight:300; color:var(--mauve); margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
+    .sum-row { display:flex; justify-content:space-between; align-items:center; padding:.55rem 0; font-size:.88rem; color:var(--muted); }
+    .sum-row.free { color:var(--green); font-weight:600; }
+    .sum-total { display:flex; justify-content:space-between; align-items:center; padding:1rem 0 0; margin-top:.5rem; border-top:1.5px solid var(--fg); }
+    .sum-total .label { font-family:var(--font-serif); font-size:1.1rem; font-weight:400; }
+    .sum-total .amount { font-family:var(--font-serif); font-size:1.5rem; font-weight:600; color:var(--mauve); }
+    .checkout-cta { display:block; width:100%; padding:1.1rem; margin-top:1.4rem; background:var(--mauve); color:var(--champagne); border:none; border-radius:var(--radius-full); font-family:var(--font-body); font-size:.88rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; transition:background .2s; text-align:center; }
+    .checkout-cta:hover { background:var(--rose); color:#fff; }
+    .continue-link { display:block; text-align:center; margin-top:1.1rem; font-size:.8rem; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; }
+    .continue-link:hover { color:var(--rose); }
+    .secure-badge { display:flex; align-items:center; justify-content:center; gap:.4rem; margin-top:1.25rem; font-size:.74rem; color:var(--muted); }
+
+    /* PROMO BOX */
+    .promo { margin-top:1.25rem; padding-top:1.25rem; border-top:1px solid var(--border); }
+    .promo label { font-size:.78rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--fg); display:block; margin-bottom:.5rem; }
+    .promo-row { display:flex; gap:.5rem; }
+    .promo-row input { flex:1; padding:.65rem 1rem; border:1.5px solid var(--border); border-radius:var(--radius-full); font-family:var(--font-body); font-size:.85rem; outline:none; background:var(--cream); color:var(--fg); transition:border-color .2s; }
+    .promo-row input:focus { border-color:var(--rose); }
+    .promo-row button { padding:.65rem 1.25rem; background:var(--mauve); color:var(--champagne); border:none; border-radius:var(--radius-full); font-family:var(--font-body); font-size:.8rem; font-weight:600; cursor:pointer; transition:background .2s; }
+    .promo-row button:hover { background:var(--rose); }
+    .promo-msg { font-size:.76rem; color:var(--green); margin-top:.4rem; font-weight:600; min-height:1em; }
+
+    /* FOOTER */
+    footer { background:var(--fg); color:rgba(255,255,255,.75); padding:4.5rem 0 2rem; margin-top:auto; }
+    .footer-top { max-width:1280px; margin:0 auto; padding:0 2rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:3rem; margin-bottom:3rem; }
+    .footer-logo { font-family:var(--font-serif); font-size:1.5rem; font-weight:300; color:var(--champagne); margin-bottom:.8rem; }
+    .footer-logo em { color:var(--rose-light); font-style:italic; }
+    .footer-col p { font-size:.84rem; color:rgba(255,255,255,.4); line-height:1.8; }
+    .footer-col h4 { font-family:var(--font-serif); font-size:1rem; font-weight:400; color:rgba(255,255,255,.9); margin-bottom:1.1rem; }
+    .footer-col ul { list-style:none; }
+    .footer-col ul li a { font-size:.82rem; color:rgba(255,255,255,.4); display:block; margin-bottom:.5rem; transition:color .2s; }
+    .footer-col ul li a:hover { color:var(--rose-light); }
+    .footer-bottom { max-width:1280px; margin:0 auto; padding:1.5rem 2rem 0; border-top:1px solid rgba(255,255,255,.08); text-align:center; font-size:.76rem; color:rgba(255,255,255,.28); }
+  </style>
+</head>
+<body>
+
+<div class="topbar">✨ <strong>Free Shipping</strong> on orders over $50 · Use code <strong>GLOW20</strong> for 20% off</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Lumière <em>Beauty</em></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+    </div>
+    <a href="cart.html" class="cart-link">🛍 Bag <span class="cart-badge" id="badge">0</span></a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> <span>/</span> <span>Your Bag</span></div>
+    <h1>Your Shopping <em>Bag</em></h1>
+  </div>
+</div>
+
+<!-- STEPS -->
+<div class="progress">
+  <div class="progress-inner">
+    <div class="step active"><span class="step-dot">1</span> Bag</div>
+    <div class="step-sep"></div>
+    <div class="step"><span class="step-dot">2</span> Details</div>
+    <div class="step-sep"></div>
+    <div class="step"><span class="step-dot">3</span> Confirm</div>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+
+    <!-- EMPTY STATE -->
+    <div id="empty-bag" style="display:none" class="empty-bag">
+      <div class="icon">💄</div>
+      <h2>Your bag is empty</h2>
+      <p>Discover our luxurious collection and find your new beauty favourites.</p>
+      <a href="shop.html" class="btn-shop">Browse the Collection →</a>
+    </div>
+
+    <!-- FILLED STATE -->
+    <div id="filled-bag" style="display:none">
+      <div class="cart-layout">
+
+        <!-- LEFT: ITEMS -->
+        <div>
+          <div class="items-header">
+            <h2>Items (<span id="item-count">0</span>)</h2>
+            <button class="clear-all" onclick="clearAll()">Remove all</button>
+          </div>
+          <div id="items-list"></div>
+          <div class="upsell" id="upsell"></div>
+        </div>
+
+        <!-- RIGHT: SUMMARY -->
+        <aside class="summary">
+          <div class="summary-title">Order Summary</div>
+          <div class="sum-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+          <div class="sum-row" id="ship-row"><span>Shipping</span><span id="shipping">$6.95</span></div>
+          <div class="sum-total">
+            <span class="label">Total</span>
+            <span class="amount" id="total">$0.00</span>
+          </div>
+          <a href="checkout.html" class="checkout-cta">Proceed to Checkout →</a>
+          <a href="shop.html" class="continue-link">← Continue Shopping</a>
+          <p class="secure-badge">🔒 Secure checkout — SSL encrypted</p>
+
+          <!-- PROMO CODE -->
+          <div class="promo">
+            <label>Promo Code</label>
+            <div class="promo-row">
+              <input type="text" id="promo-input" placeholder="Enter code" />
+              <button onclick="applyPromo()">Apply</button>
+            </div>
+            <p class="promo-msg" id="promo-msg"></p>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-col">
+      <div class="footer-logo">Lumière <em>Beauty</em></div>
+      <p>Premium cosmetics for every skin tone.</p>
+    </div>
+    <div class="footer-col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="cart.html">Bag</a></li></ul></div>
+    <div class="footer-col"><h4>Help</h4><ul><li><a>Shipping</a></li><li><a>Returns</a></li><li><a>Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a>hello@lumierebeauty.com</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">&copy; <span id="yr"></span> Lumière Beauty. All rights reserved.</div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  function getCart()   { try { return JSON.parse(localStorage.getItem('lumiere-cart')||'[]'); } catch { return []; } }
+  function saveCart(c) { localStorage.setItem('lumiere-cart', JSON.stringify(c)); render(); }
+  function fmt(n)      { return '$'+n.toFixed(2); }
+
+  function changeQty(id, delta) {
+    const c = getCart();
+    const i = c.findIndex(x=>x.id===id);
+    if (i<0) return;
+    c[i].qty += delta;
+    if (c[i].qty < 1) c.splice(i,1);
+    saveCart(c);
+  }
+
+  function removeItem(id) { saveCart(getCart().filter(x=>x.id!==id)); }
+
+  function clearAll() {
+    if (confirm('Remove all items from your bag?')) {
+      localStorage.removeItem('lumiere-cart');
+      render();
+    }
+  }
+
+  function applyPromo() {
+    const code = document.getElementById('promo-input').value.trim().toUpperCase();
+    const msg = document.getElementById('promo-msg');
+    if (code === 'GLOW20') {
+      msg.style.color = '#2d6a4f';
+      msg.textContent = '✓ 20% discount applied!';
+    } else if (code === 'FREE50') {
+      msg.style.color = '#2d6a4f';
+      msg.textContent = '✓ Free shipping applied!';
+    } else {
+      msg.style.color = '#c0392b';
+      msg.textContent = '✗ Invalid code. Try GLOW20.';
+    }
+  }
+
+  function render() {
+    const cart = getCart();
+    const qty  = cart.reduce((s,i)=>s+i.qty,0);
+    document.getElementById('badge').textContent = qty;
+
+    if (!cart.length) {
+      document.getElementById('empty-bag').style.display = 'block';
+      document.getElementById('filled-bag').style.display = 'none';
+      return;
+    }
+    document.getElementById('empty-bag').style.display = 'none';
+    document.getElementById('filled-bag').style.display = 'block';
+    document.getElementById('item-count').textContent = qty;
+
+    let sub = 0;
+    const list = document.getElementById('items-list');
+    list.innerHTML = '';
+
+    cart.forEach(item => {
+      sub += item.price * item.qty;
+      list.innerHTML += `
+        <div class="cart-item">
+          <div class="item-img"><img src="${item.img}" alt="${item.name}"></div>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-shade">${item.shade || ''}</div>
+            <div class="qty-controls">
+              <div class="qty-wrap">
+                <button onclick="changeQty(${item.id},-1)">−</button>
+                <span>${item.qty}</span>
+                <button onclick="changeQty(${item.id},1)">+</button>
+              </div>
+              <button class="remove-item" onclick="removeItem(${item.id})">✕ Remove</button>
+            </div>
+          </div>
+          <div class="item-price-col">
+            <div class="item-price">${fmt(item.price * item.qty)}</div>
+            <div class="item-unit">${fmt(item.price)} each</div>
+          </div>
+        </div>`;
+    });
+
+    // Upsell
+    const remaining = 50 - sub;
+    const upsell = document.getElementById('upsell');
+    if (sub >= 50) {
+      upsell.innerHTML = '🎁 <strong>You qualify for free shipping!</strong>';
+    } else {
+      upsell.innerHTML = `🛍 Add <strong>${fmt(remaining)}</strong> more to your bag for <strong>free shipping</strong>`;
+    }
+
+    const ship = sub >= 50 ? 0 : 6.95;
+    const total = sub + ship;
+
+    document.getElementById('subtotal').textContent = fmt(sub);
+    const shipRow = document.getElementById('ship-row');
+    if (ship === 0) {
+      shipRow.classList.add('free');
+      document.getElementById('shipping').textContent = '🎁 Free';
+    } else {
+      shipRow.classList.remove('free');
+      document.getElementById('shipping').textContent = fmt(ship);
+    }
+    document.getElementById('total').textContent = fmt(total);
+  }
+
+  render();
+</script>
+</body>
+</html>
